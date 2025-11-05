@@ -7,10 +7,7 @@ import {
   Award, 
   Clock, 
   TrendingUp, 
-  HelpCircle, 
   MessageSquare, 
-  BarChart2, 
-  User,
   CheckCircle,
   Book,
   Star,
@@ -122,40 +119,39 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Quick Actions & Recent Activity */}
+        {/* Recommended Topics & Recent Activity */}
         <div className="content-grid">
-          {/* Quick Actions */}
-          <div className="content-card">
-            <h3 className="content-card-title">Quick Actions</h3>
-            <div className="action-grid">
-              <Link href="/quiz" className="action-card">
-                <div className="action-icon action-icon-gradient-1">
-                  <HelpCircle size={20} />
-                </div>
-                <p className="action-label">Start Quiz</p>
+          {/* Recommended Topics */}
+          <div className="content-card recommended-topics">
+            <div className="content-card-header">
+              <h3 className="content-card-title">Recommended Topics</h3>
+            </div>
+
+            <div className="topics-grid">
+              <Link href="/quiz?topic=biochemistry" className="topic-card">
+                <p className="topic-title">Biochemistry Basics</p>
+                <p className="topic-meta">8 questions</p>
               </Link>
 
-              <Link href="/chat" className="action-card">
-                <div className="action-icon action-icon-gradient-2">
-                  <MessageSquare size={20} />
-                </div>
-                <p className="action-label">Ask AI Tutor</p>
+              <Link href="/quiz?topic=organic-chem" className="topic-card">
+                <p className="topic-title">Organic Chemistry</p>
+                <p className="topic-meta">12 questions</p>
               </Link>
 
-              <Link href="/progress" className="action-card">
-                <div className="action-icon action-icon-gradient-3">
-                  <BarChart2 size={20} />
-                </div>
-                <p className="action-label">View Progress</p>
+              <Link href="/quiz?topic=cell-biology" className="topic-card">
+                <p className="topic-title">Cell Biology</p>
+                <p className="topic-meta">10 questions</p>
               </Link>
 
-              <Link href="/profile" className="action-card">
-                <div className="action-icon action-icon-gradient-4">
-                  <User size={20} />
-                </div>
-                <p className="action-label">Profile Settings</p>
+              <Link href="/quiz?topic=genetics" className="topic-card">
+                <p className="topic-title">Genetics Review</p>
+                <p className="topic-meta">15 questions</p>
               </Link>
             </div>
+              <Link href="/quiz-generator" className="view-all-link">
+                Start new quiz
+                <ChevronRight size={16} />
+              </Link>
           </div>
 
           {/* Recent Activity */}
@@ -206,39 +202,6 @@ export default function DashboardPage() {
             <Link href="/progress" className="view-all-link">
               View all activity
               <ChevronRight size={16} />
-            </Link>
-          </div>
-        </div>
-
-        {/* Recommended Topics */}
-        <div className="content-card recommended-topics">
-          <div className="content-card-header">
-            <h3 className="content-card-title">Recommended Topics</h3>
-            <Link href="/quiz-generator" className="view-all-link">
-              Start new quiz
-              <ChevronRight size={16} />
-            </Link>
-          </div>
-
-          <div className="topics-grid">
-            <Link href="/quiz?topic=biochemistry" className="topic-card">
-              <p className="topic-title">Biochemistry Basics</p>
-              <p className="topic-meta">8 questions</p>
-            </Link>
-
-            <Link href="/quiz?topic=organic-chem" className="topic-card">
-              <p className="topic-title">Organic Chemistry</p>
-              <p className="topic-meta">12 questions</p>
-            </Link>
-
-            <Link href="/quiz?topic=cell-biology" className="topic-card">
-              <p className="topic-title">Cell Biology</p>
-              <p className="topic-meta">10 questions</p>
-            </Link>
-
-            <Link href="/quiz?topic=genetics" className="topic-card">
-              <p className="topic-title">Genetics Review</p>
-              <p className="topic-meta">15 questions</p>
             </Link>
           </div>
         </div>
