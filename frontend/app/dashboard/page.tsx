@@ -51,7 +51,7 @@ export default function DashboardPage() {
           <div className="header-content">
             <div>
               <h1 className="dashboard-title">
-                {greeting}, {user?.name || 'Raymund'}!
+                {greeting}, {user?.name || 'User'}!
               </h1>
               <p className="dashboard-subtitle">
                 Here's your personalized learning dashboard
