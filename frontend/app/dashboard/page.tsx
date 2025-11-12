@@ -23,7 +23,7 @@ import Link from 'next/link';
 import './dashboard.css';
 
 interface UserData {
-  name: string;
+  username: string;
   email: string;
 }
 
@@ -32,15 +32,22 @@ export default function DashboardPage() {
   const [greeting, setGreeting] = useState('Welcome back');
 
   useEffect(() => {
-    const userData = authService.getUser();
-    if (userData) {
+    // Subscribe to user changes
+    const unsubscribe = authService.subscribe((userData) => {
       setUser(userData);
-    }
+    });
 
+    // Initialize user immediately
+    const currentUser = authService.getUser();
+    if (currentUser) setUser(currentUser);
+
+    // Greeting logic
     const hour = new Date().getHours();
     if (hour < 12) setGreeting('Good morning');
     else if (hour < 18) setGreeting('Good afternoon');
     else setGreeting('Good evening');
+
+    return () => unsubscribe(); // Cleanup subscription on unmount
   }, []);
 
   return (
@@ -51,7 +58,7 @@ export default function DashboardPage() {
           <div className="header-content">
             <div>
               <h1 className="dashboard-title">
-                {greeting}, {user?.name || 'Raymund'}!
+                {greeting}, {user?.username || 'User'}!
               </h1>
               <p className="dashboard-subtitle">
                 Here's your personalized learning dashboard
@@ -142,7 +149,7 @@ export default function DashboardPage() {
                 <p className="action-label">Ask AI Tutor</p>
               </Link>
 
-              <Link href="/progress" className="action-card">
+              <Link href="/history" className="action-card">
                 <div className="action-icon action-icon-gradient-3">
                   <BarChart2 size={20} />
                 </div>
@@ -211,7 +218,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Recommended Topics */}
-        <div className="content-card recommended-topics">
+        {/* <div className="content-card recommended-topics">
           <div className="content-card-header">
             <h3 className="content-card-title">Recommended Topics</h3>
             <Link href="/quiz-generator" className="view-all-link">
@@ -241,9 +248,9 @@ export default function DashboardPage() {
               <p className="topic-meta">15 questions</p>
             </Link>
           </div>
-        </div>
+        </div> */}
 
-        {/* Upcoming Study Plan */}
+        {/* Upcoming Study Plan
         <div className="content-card study-plan">
           <h3 className="content-card-title">Upcoming Study Plan</h3>
 
@@ -274,7 +281,7 @@ export default function DashboardPage() {
               <button className="study-plan-button">Prepare</button>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </CollapsibleSidebar>
   );

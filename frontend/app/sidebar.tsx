@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Home, Settings, ChevronLeft, ChevronRight, Sparkles, LogOut } from 'lucide-react';
+import { Home, NotepadText, Settings, ChevronLeft, ChevronRight, Sparkles, LogOut } from 'lucide-react';
 import { authService } from '@/services/auth.service';
 
 interface SidebarProps {
@@ -20,6 +20,21 @@ export default function CollapsibleSidebar({ children }: SidebarProps) {
       icon: Home,
       label: 'Dashboard',
       href: '/dashboard',
+    },
+    {
+      icon: NotepadText,
+      label: 'AI Chat',
+      href: '/chat',
+    },
+    {
+      icon: NotepadText,
+      label: 'Generate Quiz',
+      href: '/quiz',
+    },
+    {
+      icon: NotepadText,
+      label: 'Quiz History',
+      href: '/history',
     },
     // {
     //   icon: Settings,

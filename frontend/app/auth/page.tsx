@@ -117,7 +117,6 @@ export default function AuthPage() {
     setFieldErrors({ email: '', username: '', password: '', confirmPassword: '' })
     setIsLoading(true)
 
-    // Client-side validation
     let hasErrors = false
 
     if (formMode === 'register') {
@@ -167,33 +166,19 @@ export default function AuthPage() {
           password: formData.password
         })
 
-        if (response.success) {
+        if (response.success && response.data?.user) {
+          // The currentUser is now injected globally via authService
           alert('Login successful! Redirecting...')
-          // Redirect to dashboard or home page
           window.location.href = '/dashboard'
         }
       }
     } catch (error) {
       console.error('Authentication error:', error)
-      
+
       if (error instanceof Error) {
-        // Display the specific error message from the server
-        if (formMode === 'register') {
-          setFieldErrors(prev => ({ 
-            ...prev, 
-            email: error.message 
-          }))
-        } else {
-          setFieldErrors(prev => ({ 
-            ...prev, 
-            email: error.message 
-          }))
-        }
+        setFieldErrors(prev => ({ ...prev, email: error.message }))
       } else {
-        setFieldErrors(prev => ({ 
-          ...prev, 
-          email: 'An unexpected error occurred. Please try again.' 
-        }))
+        setFieldErrors(prev => ({ ...prev, email: 'An unexpected error occurred. Please try again.' }))
       }
     } finally {
       setIsLoading(false)
@@ -215,9 +200,6 @@ export default function AuthPage() {
         <div className="auth-card">
           <div className="auth-header">
             <div className="logo-section">
-              {/* <div className="logo-icon">
-                <Sparkles size={32} />
-              </div> */}
               <h1 className="brand-name">Memora AI</h1>
             </div>
             
@@ -337,55 +319,6 @@ export default function AuthPage() {
               </div>
               {fieldErrors.password && (
                 <div className="error-message">{fieldErrors.password}</div>
-              )}
-              
-              {formMode === 'register' && formData.password && (
-                <div className="password-strength-container">
-                  <div className="password-strength-bar">
-                    <div 
-                      className="password-strength-fill"
-                      style={{ 
-                        width: `${(passwordStrength!.score / 5) * 100}%`,
-                        backgroundColor: passwordStrength!.color
-                      }}
-                    />
-                  </div>
-                  <div className="password-strength-label" style={{ color: passwordStrength!.color }}>
-                    {passwordStrength!.label}
-                  </div>
-                  <div className="password-requirements">
-                    <div className="requirement-item">
-                      <span className={formData.password.length >= 8 ? 'met' : 'unmet'}>
-                        {formData.password.length >= 8 ? '✓' : '○'}
-                      </span>
-                      <span>At least 8 characters</span>
-                    </div>
-                    <div className="requirement-item">
-                      <span className={/[A-Z]/.test(formData.password) ? 'met' : 'unmet'}>
-                        {/[A-Z]/.test(formData.password) ? '✓' : '○'}
-                      </span>
-                      <span>Uppercase letter</span>
-                    </div>
-                    <div className="requirement-item">
-                      <span className={/[a-z]/.test(formData.password) ? 'met' : 'unmet'}>
-                        {/[a-z]/.test(formData.password) ? '✓' : '○'}
-                      </span>
-                      <span>Lowercase letter</span>
-                    </div>
-                    <div className="requirement-item">
-                      <span className={/\d/.test(formData.password) ? 'met' : 'unmet'}>
-                        {/\d/.test(formData.password) ? '✓' : '○'}
-                      </span>
-                      <span>Number</span>
-                    </div>
-                    <div className="requirement-item">
-                      <span className={/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(formData.password) ? 'met' : 'unmet'}>
-                        {/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(formData.password) ? '✓' : '○'}
-                      </span>
-                      <span>Symbol (!@#$%^&*...)</span>
-                    </div>
-                  </div>
-                </div>
               )}
             </div>
 

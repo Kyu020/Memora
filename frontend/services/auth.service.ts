@@ -13,41 +13,41 @@ interface LoginData {
   password: string;
 }
 
+interface User {
+  id: string;
+  email: string;
+  username: string;
+}
+
 interface AuthResponse {
   success: boolean;
   message: string;
   data?: {
     token: string;
-    user: {
-      id: string;
-      email: string;
-      username: string;
-    };
+    user: User;
   };
 }
+
+// Simple in-memory store for the current user
+let currentUser: User | null = null;
+const subscribers: ((user: User | null) => void)[] = [];
 
 export const authService = {
   async register(data: RegisterData): Promise<AuthResponse> {
     try {
       const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
 
       const result = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(result.message || 'Registration failed');
-      }
+
+      if (!response.ok) throw new Error(result.message || 'Registration failed');
 
       return result;
     } catch (error) {
-      if (error instanceof Error) {
-        throw error;
-      }
+      if (error instanceof Error) throw error;
       throw new Error('Unable to connect to server. Please try again.');
     }
   },
@@ -56,29 +56,26 @@ export const authService = {
     try {
       const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
 
       const result = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(result.message || 'Login failed');
-      }
 
-      // Store token in localStorage
-      if (result.data?.token) {
+      if (!response.ok) throw new Error(result.message || 'Login failed');
+
+      if (result.data?.token && result.data.user) {
         localStorage.setItem('auth_token', result.data.token);
         localStorage.setItem('user', JSON.stringify(result.data.user));
+
+        // Inject into in-memory current user
+        currentUser = result.data.user;
+        this.notifySubscribers(currentUser);
       }
 
       return result;
     } catch (error) {
-      if (error instanceof Error) {
-        throw error;
-      }
+      if (error instanceof Error) throw error;
       throw new Error('Unable to connect to server. Please try again.');
     }
   },
@@ -86,7 +83,7 @@ export const authService = {
   async logout(): Promise<void> {
     try {
       const token = localStorage.getItem('auth_token');
-      
+
       if (token) {
         await fetch(`${API_BASE_URL}/auth/logout`, {
           method: 'POST',
@@ -101,6 +98,8 @@ export const authService = {
     } finally {
       localStorage.removeItem('auth_token');
       localStorage.removeItem('user');
+      currentUser = null;
+      this.notifySubscribers(currentUser);
     }
   },
 
@@ -108,12 +107,34 @@ export const authService = {
     return localStorage.getItem('auth_token');
   },
 
-  getUser(): any {
+  getUser(): User | null {
+    if (currentUser) return currentUser;
+
     const userStr = localStorage.getItem('user');
-    return userStr ? JSON.parse(userStr) : null;
+    if (userStr) {
+      currentUser = JSON.parse(userStr);
+      return currentUser;
+    }
+
+    return null;
   },
 
   isAuthenticated(): boolean {
     return !!this.getToken();
-  }
+  },
+
+  // --- NEW: Subscribe to user changes ---
+  subscribe(callback: (user: User | null) => void) {
+    subscribers.push(callback);
+    // Immediately call with current value
+    callback(currentUser);
+    return () => {
+      const index = subscribers.indexOf(callback);
+      if (index > -1) subscribers.splice(index, 1);
+    };
+  },
+
+  notifySubscribers(user: User | null) {
+    subscribers.forEach(cb => cb(user));
+  },
 };
