@@ -102,7 +102,7 @@ const QuizHistoryPage: React.FC = () => {
 
     try {
       // Fetch user's quizzes
-      const quizzesResponse = await fetch('${API_BASE_URL}/quiz/my-quizzes', {
+      const quizzesResponse = await fetch(`${API_BASE_URL}/quiz/my-quizzes`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -123,7 +123,7 @@ const QuizHistoryPage: React.FC = () => {
       setQuizzes(Array.isArray(quizzesData.quizzes) ? quizzesData.quizzes : []);
 
       // Fetch user's attempts
-      const attemptsResponse = await fetch('${API_BASE_URL}/quiz/history', {
+      const attemptsResponse = await fetch(`${API_BASE_URL}/quiz/history`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
