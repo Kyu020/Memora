@@ -48,6 +48,7 @@ interface CurrentUser {
 }
 
 const QuizResultsPage: React.FC = () => {
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
   const params = useParams();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -113,7 +114,7 @@ const QuizResultsPage: React.FC = () => {
 
     try {
       // Fetch attempt data
-      const attemptResponse = await fetch(`/api/quiz/attempts/${attemptId}`, {
+      const attemptResponse = await fetch(`${API_BASE_URL}/quiz/attempts/${attemptId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
