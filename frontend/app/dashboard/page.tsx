@@ -88,7 +88,7 @@ export default function DashboardPage() {
         throw new Error('No authentication token found');
       }
 
-      const response = await fetch('${API_BASE_URL}/dashboard/stats', {
+      const response = await fetch(`${API_BASE_URL}/dashboard/stats`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
