@@ -48,6 +48,7 @@ interface DashboardStats {
 }
 
 export default function DashboardPage() {
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
   const [user, setUser] = useState<UserData | null>(null);
   const [greeting, setGreeting] = useState('Welcome back');
   const [stats, setStats] = useState<DashboardStats | null>(null);
@@ -87,7 +88,7 @@ export default function DashboardPage() {
         throw new Error('No authentication token found');
       }
 
-      const response = await fetch('/api/dashboard/stats', {
+      const response = await fetch('${API_BASE_URL}/dashboard/stats', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
