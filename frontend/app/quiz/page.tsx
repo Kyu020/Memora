@@ -20,6 +20,7 @@ interface CurrentUser {
 }
 
 const QuizPage: React.FC = () => {
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
   const router = useRouter();
 
   const [user, setUser] = useState<CurrentUser | null>(null);
@@ -60,7 +61,7 @@ const QuizPage: React.FC = () => {
     }
 
     try {
-      const response = await fetch('/api/quiz/files/recent', {
+      const response = await fetch('${API_BASE_URL}/quiz/files/recent', {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -111,7 +112,7 @@ const QuizPage: React.FC = () => {
       const formData = new FormData();
       Array.from(files).forEach((file) => formData.append('files', file));
 
-      const response = await fetch('/api/quiz/upload', {
+      const response = await fetch('${API_BASE_URL}/quiz/upload', {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
@@ -168,7 +169,7 @@ const QuizPage: React.FC = () => {
     setError('');
 
     try {
-      const response = await fetch('/api/quiz/generate', {
+      const response = await fetch('${API_BASE_URL}/quiz/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -197,7 +198,7 @@ const QuizPage: React.FC = () => {
       const quizId = data.quizId;
 
       const checkStatus = async () => {
-        const statusResponse = await fetch(`/api/quiz/${quizId}/status`, {
+        const statusResponse = await fetch(`${API_BASE_URL}/quiz/${quizId}/status`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
