@@ -27,6 +27,7 @@ interface CurrentUser {
 }
 
 const AITutorPage: React.FC = () => {
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
   const router = useRouter();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -207,7 +208,7 @@ const AITutorPage: React.FC = () => {
     if (!token) return;
 
     try {
-      const response = await fetch(`/api/tutor/sessions/${session._id}`, {
+      const response = await fetch(`${API_BASE_URL}/tutor/sessions/${session._id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
