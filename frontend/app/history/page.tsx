@@ -51,6 +51,7 @@ interface CurrentUser {
 }
 
 const QuizHistoryPage: React.FC = () => {
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
   const router = useRouter();
 
   const [user, setUser] = useState<CurrentUser | null>(null);
@@ -101,7 +102,7 @@ const QuizHistoryPage: React.FC = () => {
 
     try {
       // Fetch user's quizzes
-      const quizzesResponse = await fetch('/api/quiz/my-quizzes', {
+      const quizzesResponse = await fetch('${API_BASE_URL}/quiz/my-quizzes', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -122,7 +123,7 @@ const QuizHistoryPage: React.FC = () => {
       setQuizzes(Array.isArray(quizzesData.quizzes) ? quizzesData.quizzes : []);
 
       // Fetch user's attempts
-      const attemptsResponse = await fetch('/api/quiz/history', {
+      const attemptsResponse = await fetch('${API_BASE_URL}/quiz/history', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
